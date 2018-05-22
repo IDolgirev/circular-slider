@@ -41,6 +41,61 @@ SOFTWARE.
         };
 
         var shapes = {
+            "Top Quarter": {
+                drawShape: function(jcsComponents, radius) {
+                    var d = radius * 2;
+                    var rpx = d + "px";
+                    var jcs = jcsComponents.jcs;
+                    var jcsValue = jcsComponents.jcsValue;
+                    var jcsPanel = jcsComponents.jcsPanel;
+
+                    jcs.css({
+                        'width': rpx,
+                        'height': rpx,
+                        'border-radius': rpx
+                    });
+
+                    var pd = d + (radius / 10);
+
+                    jcsPanel.css({
+                        'border-width': (radius / 10) + 'px',
+                        'border-radius': pd + 'px',
+                    });
+
+                    var outerArea = (jcs.outerWidth() - jcs.innerWidth()) + (jcsValue.outerWidth() - jcsValue.innerWidth());
+                    var iRadius = settings.innerCircleRatio * radius;
+                    var corner = radius - iRadius - outerArea / 2;
+                    jcsValue.css({
+                        'width': (iRadius * 2) + "px",
+                        'height': (iRadius * 2) + "px",
+                        'font-size': iRadius / 2 + "px",
+                        'top': corner + "px",
+                        'left': corner + "px",
+                    });
+                },
+                getCenter: function(jcsPosition, jcsRadius) {
+                    return {
+                        x: jcsPosition.left + jcsRadius,
+                        y: jcsPosition.top + jcsRadius,
+                        r: jcsRadius
+                    };
+                },
+                deg2Val: function(deg) {
+                    if (deg < 0 || deg > 359)
+                        throw "Invalid angle " + deg;
+
+                    deg = (deg + 90) % 360;
+                    return Math.round(deg * (range / 360.0)) + settings.min;
+                },
+                val2Deg: function(value) {
+                    if (value < settings.min || value > settings.max)
+                        throw "Invalid range " + value;
+
+                    var nth = value - settings.min;
+
+                    return (Math.round(nth * (360.0 / range)) - 90) % 360;
+                },
+            },
             "Circle": {
                 drawShape: function(jcsComponents, radius) {
                     var d = radius * 2;
